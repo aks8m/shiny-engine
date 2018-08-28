@@ -1,20 +1,18 @@
 package com.github.aks8m;
 
 import com.google.common.collect.Lists;
-import net.sf.mpxj.*;
+import net.sf.mpxj.CustomField;
+import net.sf.mpxj.MPXJException;
+import net.sf.mpxj.ProjectFile;
+import net.sf.mpxj.Task;
 import net.sf.mpxj.mpp.MPPReader;
 import net.sf.mpxj.reader.ProjectReader;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,31 +72,35 @@ public class App
 
         Row header = sheet.createRow(0);
 
-        header.createCell(0).setCellValue("Program Name");
-        header.createCell(1).setCellValue("Project Name");
-        header.createCell(2).setCellValue("Task Name");
-        header.createCell(3).setCellValue("Task Start Date");
-        header.createCell(4).setCellValue("Task Finish Date");
-        header.createCell(5).setCellValue("Task Percentage Complete");
-        header.createCell(6).setCellValue("Milestone");
-        header.createCell(7).setCellValue("Deliverable");
-        header.createCell(8).setCellValue("Notes");
-        header.createCell(9).setCellValue("Resources");
+        header.createCell(0).setCellValue("WBS");
+        header.createCell(1).setCellValue("Program Name");
+        header.createCell(2).setCellValue("Project Name");
+        header.createCell(3).setCellValue("Task Name");
+        header.createCell(4).setCellValue("Task Start Date");
+        header.createCell(5).setCellValue("Task Finish Date");
+        header.createCell(6).setCellValue("Task Percentage Complete");
+        header.createCell(7).setCellValue("Duration");
+        header.createCell(8).setCellValue("Milestone");
+        header.createCell(9).setCellValue("Deliverable");
+        header.createCell(10).setCellValue("Notes");
+        header.createCell(11).setCellValue("Resources");
 
 
         int rowCount = 1;
         for(WritableTask writableTask: writableTasks){
             Row newRow = sheet.createRow(rowCount);
-            newRow.createCell(0).setCellValue(writableTask.getProgramName());
-            newRow.createCell(1).setCellValue(writableTask.getProjectName());
-            newRow.createCell(2).setCellValue(writableTask.getName());
-            newRow.createCell(3).setCellValue(writableTask.getStartDate());
-            newRow.createCell(4).setCellValue(writableTask.getFinishDate());
-            newRow.createCell(5).setCellValue(writableTask.getPercentageComplete());
-            newRow.createCell(6).setCellValue(writableTask.isMilestone());
-            newRow.createCell(7).setCellValue(writableTask.isDeliverable());
-            newRow.createCell(8).setCellValue(writableTask.getNotes());
-            newRow.createCell(9).setCellValue(writableTask.getResource());
+            newRow.createCell(0).setCellValue(writableTask.getWbs());
+            newRow.createCell(1).setCellValue(writableTask.getProgramName());
+            newRow.createCell(2).setCellValue(writableTask.getProjectName());
+            newRow.createCell(3).setCellValue(writableTask.getName());
+            newRow.createCell(4).setCellValue(writableTask.getStartDate());
+            newRow.createCell(5).setCellValue(writableTask.getFinishDate());
+            newRow.createCell(6).setCellValue(writableTask.getPercentageComplete());
+            newRow.createCell(7).setCellValue(writableTask.getDuration());
+            newRow.createCell(8).setCellValue(writableTask.isMilestone());
+            newRow.createCell(9).setCellValue(writableTask.isDeliverable());
+            newRow.createCell(10).setCellValue(writableTask.getNotes());
+            newRow.createCell(11).setCellValue(writableTask.getResource());
             rowCount++;
         }
 
@@ -107,9 +109,7 @@ public class App
             workbook.write(fileOutputStream);
             fileOutputStream.flush();
             fileOutputStream.close();
-        }catch (FileNotFoundException fnfE){
-            fnfE.printStackTrace();
-        }catch (IOException ioE){
+        } catch (IOException ioE){
             ioE.printStackTrace();
         }
     }

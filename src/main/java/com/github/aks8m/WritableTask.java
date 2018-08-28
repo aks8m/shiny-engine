@@ -22,6 +22,8 @@ public class WritableTask {
     private String resource;
     private String programName;
     private String projectName;
+    private String wbs;
+    private String duration;
 
     public WritableTask(Task task, List<CustomField> customFields){
         this.task = task;
@@ -31,10 +33,16 @@ public class WritableTask {
         this.percentageComplete = task.getPercentageComplete().toString();
         this.isMilestone = task.getMilestone();
         this.notes = task.getNotes();
+        this.duration = task.getDuration().toString();
+        this.wbs = task.getWBS();
 
         for (CustomField customField : customFields) {
-            if (String.valueOf(task.getFieldByAlias(customField.getAlias())).equals("D")) {
-                this.isDeliverable = true;
+            if(customField.getAlias().equals("Deliverables")){
+                if (String.valueOf(this.task.getFieldByAlias(customField.getAlias())).equals("D")) {
+                    this.isDeliverable = true;
+                }else {
+                    this.isDeliverable = false;
+                }
             }
         }
 
@@ -69,8 +77,9 @@ public class WritableTask {
             this.programName = "";
             this.projectName = "";
         }else if(this.parentTaskHierarchy.size() < 2){
-            this.programName = "";
-            this.projectName = this.parentTaskHierarchy.pop();
+            String programString = this.parentTaskHierarchy.pop();
+            this.programName = programString;
+            this.projectName = programString;
         }else{
             this.programName = this.parentTaskHierarchy.pop();
             this.projectName = this.parentTaskHierarchy.pop();
@@ -115,5 +124,13 @@ public class WritableTask {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public String getWbs() {
+        return wbs;
+    }
+
+    public String getDuration() {
+        return duration;
     }
 }
