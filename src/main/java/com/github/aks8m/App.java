@@ -25,7 +25,6 @@ public class App
 
     private static List<WritableTask> writableTasks = new ArrayList<>();
 
-
     public static void main( String[] args )
     {
         try {
@@ -39,8 +38,11 @@ public class App
 
                 Task parentTask = task.getParentTask();
 
-                if(parentTask != null && (parentTask.getName().contains("C:") || parentTask.getName().contains("VHIE IMS") )){
-                    depthFirstSearch(task, customFields);
+                if(parentTask != null){
+                    if(parentTask.getName().contains("C:") || parentTask.getName().contains("VHIE IMS")){
+                        writableTasks.add( new WritableTask(task));
+                        depthFirstSearch(task, customFields);
+                    }
                 }
             }
 
@@ -59,7 +61,7 @@ public class App
             }
         }
 
-        if(task.getChildTasks().size() == 0){
+        if(task.getChildTasks().size() == 0 &&  !writableTasks.stream().anyMatch(writableTask -> writableTask.getWbs().equals(task.getWBS()))){
             WritableTask writableTask = new WritableTask(task, customFields);
             writableTask.buildHierarchy();
             writableTasks.add(writableTask);
@@ -95,8 +97,8 @@ public class App
             newRow.createCell(3).setCellValue(writableTask.getName());
             newRow.createCell(4).setCellValue(writableTask.getStartDate());
             newRow.createCell(5).setCellValue(writableTask.getFinishDate());
-            newRow.createCell(6).setCellValue(writableTask.getPercentageComplete());
-            newRow.createCell(7).setCellValue(writableTask.getDuration());
+            newRow.createCell(6).setCellValue(new Double(writableTask.getPercentageComplete()));
+            newRow.createCell(7).setCellValue(new Double(writableTask.getDuration()));
             newRow.createCell(8).setCellValue(writableTask.isMilestone());
             newRow.createCell(9).setCellValue(writableTask.isDeliverable());
             newRow.createCell(10).setCellValue(writableTask.getNotes());

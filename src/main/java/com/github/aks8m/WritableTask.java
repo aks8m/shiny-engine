@@ -25,6 +25,38 @@ public class WritableTask {
     private String wbs;
     private String duration;
 
+    public WritableTask(Task task){
+        this.task = task;
+        this.name = "";
+        this.startDate = task.getStart().toString();
+        this.finishDate = task.getFinish().toString();
+        this.percentageComplete = task.getPercentageComplete().toString();
+        this.isMilestone = task.getMilestone();
+        this.notes = task.getNotes();
+        this.duration = task.getDuration().toString().replace("d","");
+        this.wbs = task.getWBS();
+
+        for (ResourceAssignment resourceAssignment : task.getResourceAssignments()) {
+            Resource tempResource = resourceAssignment.getResource();
+            if (tempResource != null) {
+                this.resources.add(tempResource);
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0; i < this.resources.size() - 1; i++){
+            stringBuilder.append(resources.get(i).getName() + " & ");
+        }
+
+        if(this.resources.size() > 1) {
+            stringBuilder.append(this.resources.get(this.resources.size() - 1).getName());
+        }
+        this.resource = stringBuilder.toString();
+
+        this.projectName = this.task.getName();
+        this.programName = this.task.getParentTask().getName();
+    }
+
     public WritableTask(Task task, List<CustomField> customFields){
         this.task = task;
         this.name = task.getName();
@@ -33,7 +65,7 @@ public class WritableTask {
         this.percentageComplete = task.getPercentageComplete().toString();
         this.isMilestone = task.getMilestone();
         this.notes = task.getNotes();
-        this.duration = task.getDuration().toString();
+        this.duration = task.getDuration().toString().replace("d","");
         this.wbs = task.getWBS();
 
         for (CustomField customField : customFields) {
